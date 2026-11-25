@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECG Guardian · Interactive Cardiac AI Presentation</title>
+  <meta name="description" content="Interactive Three.js and Anime.js clinical web presentation for Explainable Multi-Label ECG Arrhythmia Classification (ECG Guardian) by Dr. Sonali Patel.">
+  <meta property="og:title" content="ECG Guardian · Interactive Cardiac AI Presentation">
+  <meta property="og:description" content="Explainable Multi-Label ECG Arrhythmia Classification with SE-ResNet-1D and 1D Grad-CAM.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23051916'/%3E%3Cpath d='M4 17h5l3-8 4 14 3-9 2 3h7' fill='none' stroke='%2319e68c' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/presentation.css">
+</head>
+<body>
+
+  <!-- Living 3D WebGL Telemetry Stage -->
+  <canvas id="three-bg"></canvas>
+  <div class="telemetry-overlay"></div>
+
+  <!-- Top Progress Track -->
+  <div class="top-progress-track">
+    <div class="top-progress-fill" id="topProgressFill"></div>
+  </div>
+
+  <!-- Persistent Glass Header -->
+  <header class="site-header">
+    <div class="brand-chip">
+      <div class="brand-icon-crt">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+      </div>
+      <span class="brand-name">ECG GUARDIAN</span>
+      <span class="brand-divider"></span>
+      <span class="brand-section-label" id="headerSectionLabel">OVERVIEW</span>
+    </div>
+
+    <div class="header-right">
+      <div class="live-bpm-pill">
+        <span class="bpm-dot"></span>
+        <span>25 mm/s · 250 Hz · SE-ResNet-1D</span>
+      </div>
+      <div class="author-badge">
+        <span class="author-avatar">SP</span>
+        <span>Dr. Sonali Patel</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Right Slide Navigation Rail -->
+  <nav class="slide-rail" id="slideRail" aria-label="Slide Navigation"></nav>
+
+  <!-- Main Presentation Stage (11 Slides) -->
+  <main class="presentation-stage">
+
+    <!-- ==========================================
+         SLIDE 1: COVER / HERO
+         ========================================== -->
+    <section class="slide active" data-category="Introduction">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-badge anim-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+            EXPLAINABLE CARDIAC AI PLATFORM
+          </div>
+
+          <h1 class="hero-title anim-item">
+            Multi-Label ECG<br>
+            <span class="highlight-gradient">Arrhythmia Detection</span><br>
+            Doctors Can Trust
+          </h1>
+
+          <p class="hero-summary anim-item">
+            ECG Guardian brings together real-time signal cleaning, Pan-Tompkins heartbeat measurements, SE-ResNet-1D deep learning, and visual Grad-CAM heatmaps inside a clinical platform built for both doctors and patients.
+          </p>
+
+          <!-- Animated Vector ECG Trace -->
+          <div class="hero-ecg-strip anim-item">
+            <svg class="hero-ecg-svg" viewBox="0 0 520 60" preserveAspectRatio="none">
+              <path id="heroEcgLine" class="ecg-path-glow"
+                d="M0,34 L40,34 Q48,27 56,34 L72,34 L77,40 L84,6 L91,50 L97,34 L118,34 Q130,22 142,34 L200,34 Q208,27 216,34 L232,34 L237,40 L244,6 L251,50 L257,34 L278,34 Q290,22 302,34 L360,34 Q368,27 376,34 L392,34 L397,40 L404,6 L411,50 L417,34 L438,34 Q450,22 462,34 L520,34" />
+            </svg>
+            <div class="hero-ecg-meta">
+              LEAD II · 10s<br>
+              GRAD-CAM XAI
+            </div>
+          </div>
+
+          <div class="hero-actions anim-item">
+            <button class="btn-start-deck" id="btnStartDeck">
+              Start Presentation
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+
+            <div class="hero-author-card">
+              <span class="author-avatar" style="width: 30px; height: 30px; font-size: 0.78rem;">SP</span>
+              <div class="hero-author-info">
+                <strong>Dr. Sonali Patel</strong>
+                <span>Lead Researcher &amp; Cardiologist · CityCare Hospital</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Platform Hardware Preview -->
+        <div class="hero-device-card anim-item">
+          <div class="hero-device-top">
+            <div class="device-dots"><span></span><span></span><span></span></div>
+            <span>ECG GUARDIAN · LIVE PLATFORM</span>
+          </div>
+          <div class="hero-screenshot-wrap zoomable-img">
+            <img src="images/screenshots/screen_01_landing.png" alt="ECG Guardian Landing Page">
+          </div>
+          <div class="hero-stats-strip">
+            <div class="mini-stat">
+              <strong>0.9993</strong>
+              <span>Val ROC-AUC</span>
+            </div>
+            <div class="mini-stat">
+              <strong>10 Classes</strong>
+              <span>Multi-Label AI</span>
+            </div>
+            <div class="mini-stat">
+              <strong>1D Grad-CAM</strong>
+              <span>Visual Proof</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 2: WHY WE BUILT THIS (CLINICAL STORY)
+         ========================================== -->
+    <section class="slide" data-category="Clinical Problem">
+      <div class="slide-head">
+        <div class="eyebrow-tag anim-item">Why It Matters</div>
+        <h2 class="slide-h2 anim-item">Solving Real Problems in Everyday ECG Reading</h2>
+        <p class="slide-lead anim-item">Standard automated ECG readers often give one label or a mysterious score without showing how they arrived at it.</p>
+      </div>
+
+      <div class="story-grid">
+        <div class="story-card anim-item">
+          <div>
+            <div class="story-icon coral">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </div>
+            <h3 class="story-title">Patients Often Have Multiple Conditions</h3>
+            <p class="story-text">
+              A single heart tracing rarely tells just one story. A patient can easily show Atrial Fibrillation alongside a Bundle Branch Block or premature beats at the exact same time. Standard single-label models are forced to pick only one and miss the rest.
+            </p>
+          </div>
+          <div class="story-foot">Solution: Independent probabilities for all 10 conditions</div>
+        </div>
+
+        <div class="story-card anim-item">
+          <div>
+            <div class="story-icon green">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+            </div>
+            <h3 class="story-title">Doctors Cannot Trust a Black Box</h3>
+            <p class="story-text">
+              If an AI says "Arrhythmia detected" with no explanation, a cardiologist cannot safely act on it. Clinicians need visual proof showing whether the network actually looked at missing P-waves, widened QRS spikes, or shifted ST segments.
+            </p>
+          </div>
+          <div class="story-foot">Solution: 1D Grad-CAM highlights the exact wave segment</div>
+        </div>
+
+        <div class="story-card warm anim-item">
+          <div>
+            <div class="story-icon terracotta">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <h3 class="story-title">One Connected Workflow</h3>
+            <p class="story-text">
+              Instead of stopping at a research script, ECG Guardian wraps the AI model inside a practical hospital web app: upload a scan or CSV, verify intervals, review safety checks, sign the report, and let patients read clear summaries at home.
+            </p>
+          </div>
+          <div class="story-foot">Built for both Doctor Console &amp; Patient Portal</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 3: HOW THE SYSTEM WORKS
+         ========================================== -->
+    <section class="slide" data-category="Architecture">
+      <div class="slide-head">
+        <div class="eyebrow-tag anim-item">System Pipeline</div>
+        <h2 class="slide-h2 anim-item">From Raw ECG Upload to Doctor-Signed Report</h2>
+        <p class="slide-lead anim-item">Every scan moves smoothly through five clear stages inside the Flask &amp; PyTorch backend.</p>
+      </div>
+
+      <div class="pipeline-track">
+        <div class="pipe-card anim-item">
+          <div>
+            <span class="pipe-step">STEP 01</span>
+            <h3 class="pipe-title">Universal Upload</h3>
+            <ul class="pipe-list">
+              <li>Accepts CSV, JSON &amp; text traces</li>
+              <li>Reads scanned PDFs &amp; PNG/JPG ECGs</li>
+              <li>Built-in MIT-BIH benchmark cases</li>
+              <li>Resamples smoothly to 250 Hz</li>
+            </ul>
+          </div>
+          <div class="pipe-chip">multimodal_parser.py</div>
+        </div>
+
+        <div class="pipe-card anim-item">
+          <div>
+            <span class="pipe-step">STEP 02</span>
+            <h3 class="pipe-title">Signal Cleaning</h3>
+            <ul class="pipe-list">
+              <li>0.5–45 Hz Butterworth bandpass</li>
+              <li>50/60 Hz powerline notch filter</li>
+              <li>Double-median baseline fix</li>
+              <li>Pan-Tompkins R-peaks &amp; HRV</li>
+            </ul>
+          </div>
+          <div class="pipe-chip">filters.py · qrs_detector.py</div>
+        </div>
+
+        <div class="pipe-card anim-item">
+          <div>
+            <span class="pipe-step">STEP 03</span>
+            <h3 class="pipe-title">SE-ResNet-1D</h3>
+            <ul class="pipe-list">
+              <li>1.99M parameter 1D ResNet</li>
+              <li>Squeeze-and-Excitation blocks</li>
+              <li>Temporal attention pooling</li>
+              <li>Sigmoid multi-label scores</li>
+            </ul>
+          </div>
+          <div class="pipe-chip">ecg_model.py</div>
+        </div>
+
+        <div class="pipe-card anim-item">
+          <div>
+            <span class="pipe-step">STEP 04</span>
+            <h3 class="pipe-title">1D Grad-CAM</h3>
+            <ul class="pipe-list">
+              <li>Gradients on final conv layer</li>
+              <li>Upsampled to 2,500 samples</li>
+              <li>Pinpoints P, QRS &amp; ST waves</li>
+              <li>Integrated Gradients support</li>
+            </ul>
+          </div>
+          <div class="pipe-chip">gradcam1d.py · saliency.py</div>
+        </div>
+
+        <div class="pipe-card anim-item">
+          <div>
+            <span class="pipe-step">STEP 05</span>
+            <h3 class="pipe-title">CDS &amp; Reporting</h3>
+            <ul class="pipe-list">
+              <li>Urgency &amp; allergy safety checks</li>
+              <li>QT-prolongation warning gate</li>
+              <li>Doctor review &amp; prescription</li>
+              <li>PDF export &amp; patient portal</li>
+            </ul>
+          </div>
+          <div class="pipe-chip">interpreter.py · app.py</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 4: PUBLIC GATEWAY
+         ========================================== -->
+    <section class="slide" data-category="Public Gateway">
+      <div class="slide-head">
+        <div class="eyebrow-tag anim-item">First Impression</div>
+        <h2 class="slide-h2 anim-item">A Clean, Approachable Clinical Gateway</h2>
+        <p class="slide-lead anim-item">Designed so doctors and patients can jump straight into their portal without fighting cluttered menus.</p>
+      </div>
+
+      <div class="showcase-split">
+        <div class="browser-mockup zoomable-img anim-item">
+          <div class="browser-chrome">
+            <div class="device-dots"><span></span><span></span><span></span></div>
+            <span class="browser-url">ecg-guardian / landing</span>
+            <span class="zoom-hint">Click to zoom</span>
+          </div>
+          <div class="browser-screen">
+            <img src="images/screenshots/screen_01_landing.png" alt="ECG Guardian Landing Page">
+          </div>
+        </div>
+
+        <div class="feature-card anim-item">
+          <ul class="feature-points">
+            <li class="feature-point">
+              <span class="point-badge">1</span>
+              <div><strong>Warm Clinical Contrast:</strong> Deep pine green paired with warm cream cards feels calm and readable—never harsh on tired eyes during hospital shifts.</div>
+            </li>
+            <li class="feature-point">
+              <span class="point-badge">2</span>
+              <div><strong>Instant Portal Entry:</strong> Direct 1-click access to the Doctor Console or Patient Portal right from the hero and top bar.</div>
+            </li>
+            <li class="feature-point">
+              <span class="point-badge">3</span>
+              <div><strong>Clear Clinical Scope:</strong> Explains 12-lead analysis, arrhythmia detection, and medication safety checks in plain language.</div>
+            </li>
+          </ul>
+
+          <div class="feature-callout">
+            <div class="callout-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            <div class="callout-body">
+              <strong>Zero Setup Friction</strong>
+              Runs directly in any browser with instant serverless and local Flask compatibility.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 5: DUAL-PORTAL ROLE AUTHENTICATION
+         ========================================== -->
+    <section class="slide" data-category="Access & Security">
+      <div class="slide-head">
+        <div class="eyebrow-tag anim-item">Role Separation</div>
+        <h2 class="slide-h2 anim-item">Dedicated Workspaces for Doctors and Patients</h2>
+        <p class="slide-lead anim-item">One login screen cleanly routes clinical staff and patients to completely tailored views.</p>
+      </div>
+
+      <div class="showcase-split reverse">
+        <div class="feature-card anim-item">
+          <ul class="feature-points">
+            <li class="feature-point">
+              <span class="point-badge">1</span>
+              <div><strong>Doctor Console (Dr. Sonali Patel):</strong> Unlocks patient registry management, raw ECG signal scanning, Grad-CAM inspection, and prescription sign-off.</div>
+            </li>
+            <li class="feature-point">
+              <span class="point-badge">2</span>
+              <div><strong>Patient Portal (Raj Verma):</strong> Shows personal reports, easy-to-understand heart summaries, doctor notes, and upcoming appointments.</div>
+            </li>
+            <li class="feature-point">
+              <span class="point-badge">3</span>
+              <div><strong>Reliable Session Handling:</strong> Backed by `/api/auth/login` with fast client fallback so demos and clinical logins never stall.</div>
+            </li>
+          </ul>
+
+          <div class="feature-callout">
+            <div class="callout-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <div class="callout-body">
+              <strong>Right Info, Right Audience</strong>
+              Doctors get diagnostic depth; patients get clarity without overwhelming medical jargon.
+            </div>
+          </div>
+        </div>
+
+        <div class="browser-mockup zoomable-img anim-item">
+          <div class="browser-chrome">
+            <div class="device-dots"><span></span><span></span><span></span></div>
+            <span class="browser-url">ecg-guardian / auth</span>
+            <span class="zoom-hint">Click to zoom</span>
+          </div>
+          <div class="browser-screen">
+            <img src="images/screenshots/screen_02_auth.png" alt="Role-Based Authentication Screen">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 6: CARDIOLOGIST COMMAND DASHBOARD
+         ========================================== -->
+    <section class="slide" data-category="Doctor Console">
+      <div class="slide-head">
+        <div class="eyebrow-tag anim-item">Clinical Overview</div>
+        <h2 class="slide-h2 anim-item">Cardiologist Dashboard &amp; Live CRT Monitor</h2>
+        <p class="slide-lead anim-item">At CityCare Hospital, Dr. Sonali Patel sees cohort numbers, live telemetry, and urgent cases in one glance.</p>
+      </div>
+
+      <div class="showcase-split">
+        <div class="browser-mockup zoomable-img anim-item">
+          <div class="browser-chrome">
+            <div class="device-dots"><span></span><span></span><span></span></div>
+            <span class="browser-url">ecg-guardian / doctor-dashboard</span>
+            <span class="zoom-hint">Click to zoom</span>
+          </div>
+          <div class="browser-screen">
+            <img src="images/screenshots/screen_03_doctor_dashboard.png" alt="Doctor Dashboard with Live CRT Telemetry">
+          </div>
+        </div>
+
+        <div class="feature-card anim-item">
+          <ul class="feature-points">
+            <li class="feature-point">
+              <span class="point-badge">1</span>
+              <div><strong>Daily Hospital Snapshot:</strong> Tracks 142 patients, 37 analyses today, 5 flagged abnormal findings, and 32 reports awaiting physician review.</div>
+            </li>
+            <li class="feature-point">
+              <span class="point-badge">2</span>
+              <div><strong>Hardware-Style CRT Telemetry:</strong> Live Lead II oscilloscope display with rotary-style speed (25 mm/s), gain (10 mm/mV), and 0.05–150 Hz filter indicators.</div>
+            </li>
+            <li class="feature-point">
+              <span class="point-badge">3</span>
+              <div><strong>Priority Triage Queue:</strong> Highlights cases like Atrial Fibrillation (Prob. 0.92) or Possible Ischemia (Prob. 0.78) with 1-click access to Scan ECG.</div>
+            </li>
+          </ul>
+
+          <div class="feature-callout">
+            <div class="callout-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <div class="callout-body">
+              <strong>Familiar Bedside Feel</strong>
+              Inspired by real cardiac telemetry monitors so cardiologists feel immediately at home.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 7: SIGNAL INGESTION & PREPROCESSING
+         ========================================== -->
+    <section class="slide" data-category="Signal Processing">
+      <div class="slide-head">
+        <div class="eyebrow-tag anim-item">Scan &amp; Clean</div>
+        <h2 class="slide-h2 anim-item">Universal ECG Ingestion &amp; Wave Cleaning</h2>
+        <p class="slide-lead anim-item">Handles messy real-world recordings, scanned reports, and standard benchmark files cleanly.</p>
+      </div>
+
+      <div class="showcase-split reverse">
+        <div class="feature-card anim-item">
+          <ul class="feature-points">
+            <li class="feature-point">
+              <span class="point-badge">1</span>
+              <div><strong>Flexible File Ingestion:</strong> Upload CSV waveforms, JSON streams, or even scanned PDF/image ECG traces—plus built-in Normal, PVC, AFib, LBBB, and Infarction test cases.</div>
+            </li>
+            <li class="feature-point">
+              <span class="point-badge">2</span>
+              <div><strong>Noise &amp; Drift Removal:</strong> Applies Butterworth bandpass filtering (0.5–45 Hz), 50/60 Hz notch filtering, and double-median baseline wander correction.</div>
+            </li>
+            <li class="feature-point">
+              <span class="point-badge">3</span>
+              <div><strong>Pan-Tompkins Beat Detection:</strong> Locates every R-peak accurately to compute Heart Rate, mean RR intervals, SDNN, RMSSD, and pNN50 heart rate variability.</div>
+            </li>
+          </ul>
+
+          <div class="feature-callout">
+            <div class="callout-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <div class="callout-body">
+              <strong>Standardized to 250 Hz</strong>
+              Every signal is resampled to 2,500 samples (10s window) and Z-score normalized before AI inference.
+            </div>
+          </div>
+        </div>
+
+        <div class="browser-mockup zoomable-img anim-item">
+          <div class="browser-chrome">
+            <div class="device-dots"><span></span><span></span><span></span></div>
+            <span class="browser-url">ecg-guardian / scan-ecg</span>
+            <span class="zoom-hint">Click to zoom</span>
+          </div>
+          <div class="browser-screen">
+            <img src="images/screenshots/screen_04_ecg_scan.png" alt="ECG Scan and Signal Upload Screen">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 8: SE-RESNET-1D & 1D GRAD-CAM
+         ========================================== -->
+    <section class="slide" data-category="Explainable AI">
+      <div class="slide-head">
+        <div class="eyebrow-tag anim-item">Model &amp; Saliency</div>
+        <h2 class="slide-h2 anim-item">SE-ResNet-1D Predictions with Visual Proof</h2>
+        <p class="slide-lead anim-item">Detects 10 arrhythmia &amp; conduction classes simultaneously while marking R-peaks and key cardiac intervals.</p>
+      </div>
+
+      <div class="showcase-split">
+        <div class="browser-mockup zoomable-img anim-item">
+          <div class="browser-chrome">
+            <div class="device-dots"><span></span><span></span><span></span></div>
+            <span class="browser-url">ecg-guardian / analysis</span>
+            <span class="zoom-hint">Click to zoom</span>
+          </div>
+          <div class="browser-screen">
+            <img src="images/screenshots/screen_05_analysis.png" alt="ECG Analysis and Measurements Screen">
+          </div>
+        </div>
+
+        <div class="feature-card anim-item">
+          <ul class="feature-points">
+            <li class="feature-point">
+              <span class="point-badge">1</span>
+              <div><strong>Channel &amp; Time Attention:</strong> SE-ResNet-1D weighs informative signal channels and focuses on pathological beats via temporal attention pooling.</div>
+            </li>
+            <li class="feature-point">
+              <span class="point-badge">2</span>
+              <div><strong>1D Grad-CAM Explanations:</strong> Computes gradient heatmaps across the final convolutional layer so doctors can inspect the exact wave region driving each score.</div>
+            </li>
+            <li class="feature-point">
+              <span class="point-badge">3</span>
+              <div><strong>Complete Interval Readout:</strong> Displays Heart Rate, PR Interval, QRS Duration, QT Interval, and Bazett-corrected QTc alongside confidence scores.</div>
+            </li>
+          </ul>
+
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); margin-bottom: 6px;">10 MULTI-LABEL DIAGNOSTIC CLASSES</div>
+            <div class="class-pills">
+              <span class="class-pill">NORM</span>
+              <span class="class-pill">AFIB</span>
+              <span class="class-pill">AFL</span>
+              <span class="class-pill">LBBB</span>
+              <span class="class-pill">RBBB</span>
+              <span class="class-pill">PVC</span>
+              <span class="class-pill">PAC</span>
+              <span class="class-pill">STD</span>
+              <span class="class-pill">STE</span>
+              <span class="class-pill">AVB1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 9: CLINICAL DECISION SUPPORT (CDS)
+         ========================================== -->
+    <section class="slide" data-category="Decision Support">
+      <div class="slide-head">
+        <div class="eyebrow-tag anim-item">Medication Safety</div>
+        <h2 class="slide-h2 anim-item">Clinical Decision Support &amp; Safety Gates</h2>
+        <p class="slide-lead anim-item">Turns raw AI predictions into safe, actionable clinical review—with the doctor always in final control.</p>
+      </div>
+
+      <div class="showcase-split reverse">
+        <div class="feature-card anim-item">
+          <ul class="feature-points">
+            <li class="feature-point">
+              <span class="point-badge">1</span>
+              <div><strong>Urgency Stratification:</strong> Flags detected conditions with clear triage urgency (such as Prompt Review) alongside documented comorbidities like Hypertension or Diabetes.</div>
+            </li>
+            <li class="feature-point">
+              <span class="point-badge">2</span>
+              <div><strong>Automated Safety Checks:</strong> Verifies allergy conflicts, drug-drug interactions, and Bazett QTc prolongation risk before displaying therapy candidates.</div>
+            </li>
+            <li class="feature-point">
+              <span class="point-badge">3</span>
+              <div><strong>Doctor Has the Final Word:</strong> Cardiologists can Confirm, Modify, or Reject the AI finding, write observations, and seal it under their Medical Registration ID.</div>
+            </li>
+          </ul>
+
+          <div class="feature-callout">
+            <div class="callout-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <div class="callout-body">
+              <strong>Human-in-the-Loop Design</strong>
+              AI assists and checks for safety risks; Dr. Sonali Patel signs and authorizes every final plan.
+            </div>
+          </div>
+        </div>
+
+        <div class="browser-mockup zoomable-img anim-item">
+          <div class="browser-chrome">
+            <div class="device-dots"><span></span><span></span><span></span></div>
+            <span class="browser-url">ecg-guardian / clinical-decision-support</span>
+            <span class="zoom-hint">Click to zoom</span>
+          </div>
+          <div class="browser-screen">
+            <img src="images/screenshots/screen_06_cds.png" alt="Clinical Decision Support Screen">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 10: DIAGNOSTIC REPORT & COHORT REGISTRY
+         ========================================== -->
+    <section class="slide" data-category="Reports &amp; Cohort">
+      <div class="slide-head">
+        <div class="eyebrow-tag anim-item">Hospital Records</div>
+        <h2 class="slide-h2 anim-item">Signed Diagnostic Reports &amp; Patient Directory</h2>
+        <p class="slide-lead anim-item">Every verified ECG becomes a structured hospital report tied to the patient's longitudinal record.</p>
+      </div>
+
+      <div class="dual-screens">
+        <div class="dual-card anim-item">
+          <div class="browser-mockup zoomable-img" style="height: 360px;">
+            <div class="browser-chrome">
+              <div class="device-dots"><span></span><span></span><span></span></div>
+              <span class="browser-url">ecg-guardian / doctor-report</span>
+              <span class="zoom-hint">Zoom</span>
+            </div>
+            <div class="browser-screen">
+              <img src="images/screenshots/screen_07_doctor_report.png" alt="Formal Doctor Report">
+            </div>
+          </div>
+          <div class="dual-caption">
+            <h4>Formal Printable Doctor Report</h4>
+            <p>Includes patient demographics, ECG intervals, AI findings, physician notes, digital sign-off, and 1-click PDF report export.</p>
+          </div>
+        </div>
+
+        <div class="dual-card anim-item">
+          <div class="browser-mockup zoomable-img" style="height: 360px;">
+            <div class="browser-chrome">
+              <div class="device-dots"><span></span><span></span><span></span></div>
+              <span class="browser-url">ecg-guardian / patients</span>
+              <span class="zoom-hint">Zoom</span>
+            </div>
+            <div class="browser-screen">
+              <img src="images/screenshots/screen_09_patient_management.png" alt="Patient Cohort Registry">
+            </div>
+          </div>
+          <div class="dual-caption">
+            <h4>Active Patient Registry</h4>
+            <p>Searchable hospital cohort directory with MRN tracking, quick registration, profile view, and direct "Scan ECG" triggers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 11: PATIENT PORTAL & REAL METRICS
+         ========================================== -->
+    <section class="slide" data-category="Patient Experience &amp; Results">
+      <div class="slide-head">
+        <div class="eyebrow-tag anim-item">Outpatient Care &amp; Validation</div>
+        <h2 class="slide-h2 anim-item">Empowering Patients, Proven on Benchmark Data</h2>
+        <p class="slide-lead anim-item">Patients get peace of mind with clear follow-ups, backed by verified SE-ResNet-1D validation performance.</p>
+      </div>
+
+      <div class="showcase-split">
+        <div class="browser-mockup zoomable-img anim-item">
+          <div class="browser-chrome">
+            <div class="device-dots"><span></span><span></span><span></span></div>
+            <span class="browser-url">ecg-guardian / patient-portal</span>
+            <span class="zoom-hint">Click to zoom</span>
+          </div>
+          <div class="browser-screen">
+            <img src="images/screenshots/screen_08_patient_dashboard.png" alt="Patient Heart Health Dashboard">
+          </div>
+        </div>
+
+        <div class="feature-card anim-item">
+          <div class="metrics-grid-4">
+            <div class="metric-tile">
+              <div class="metric-num" data-count="0.9993" data-decimals="4">0.9993</div>
+              <div class="metric-label">Validation ROC-AUC</div>
+              <div class="metric-sub">10-class multi-label checkpoint</div>
+            </div>
+            <div class="metric-tile">
+              <div class="metric-num" data-count="98.0" data-decimals="1" data-suffix="%">98.0%</div>
+              <div class="metric-label">F1-Macro Score</div>
+              <div class="metric-sub">F1-Micro: 98.54%</div>
+            </div>
+            <div class="metric-tile">
+              <div class="metric-num warm" data-count="95.71" data-decimals="2" data-suffix="%">95.71%</div>
+              <div class="metric-label">Subset Accuracy</div>
+              <div class="metric-sub">Hamming Loss: 0.0043</div>
+            </div>
+            <div class="metric-tile">
+              <div class="metric-num warm" data-count="1.99" data-decimals="2" data-suffix="M">1.99M</div>
+              <div class="metric-label">Model Parameters</div>
+              <div class="metric-sub">700 records (560 train / 140 val)</div>
+            </div>
+          </div>
+
+          <ul class="feature-points" style="gap: 10px;">
+            <li class="feature-point">
+              <span class="point-badge">✓</span>
+              <div><strong>Patient-Friendly Dashboard:</strong> Raj Verma sees his latest ECG report status, doctor's direct guidance, and upcoming clinic appointment date cleanly.</div>
+            </li>
+            <li class="feature-point">
+              <span class="point-badge">✓</span>
+              <div><strong>Seamless Follow-Up:</strong> Includes quick actions to view reports, check appointments, or initiate a new ECG checkup.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating Glass Control Dock -->
+  <footer class="floating-dock">
+    <button class="dock-btn" id="btnPrev" title="Previous Slide (Left Arrow)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Prev
+    </button>
+
+    <div class="dock-counter">
+      <span id="counterCurrent">01</span> / <span id="counterTotal">11</span>
+    </div>
+
+    <button class="dock-btn" id="btnNext" title="Next Slide (Right Arrow / Space)">
+      Next
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+
+    <span class="dock-sep"></span>
+
+    <button class="dock-btn" id="btnOverview" title="Slide Overview Grid (Tab / G)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      Slides
+    </button>
+
+    <button class="dock-btn" id="btnFullscreen" title="Fullscreen (F)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 3 21 3 21 9"></polyline>
+        <polyline points="9 21 3 21 3 15"></polyline>
+        <line x1="21" y1="3" x2="14" y2="10"></line>
+        <line x1="3" y1="21" x2="10" y2="14"></line>
+      </svg>
+    </button>
+
+    <button class="dock-btn accent" id="btnExportPdf" title="Print / Save as PDF (P)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 9V2h12v7"></path>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+        <rect x="6" y="14" width="12" height="8"></rect>
+      </svg>
+      Save PDF
+    </button>
+  </footer>
+
+  <!-- Slide Overview Grid Modal -->
+  <div class="overview-overlay" id="overviewOverlay">
+    <div class="overview-top">
+      <div>
+        <h2 style="font-family: var(--font-display); font-size: 1.55rem; color: var(--text-cream);">All Presentation Slides</h2>
+        <p style="font-size: 0.85rem; color: var(--text-sage); margin-top: 4px;">Select any slide to jump right to it, or press Esc to close.</p>
+      </div>
+      <button class="dock-btn" id="closeOverview">Close (Esc)</button>
+    </div>
+    <div class="overview-grid" id="overviewGrid"></div>
+  </div>
+
+  <!-- Screenshot Zoom Lightbox -->
+  <div class="lightbox-modal" id="lightboxModal">
+    <img id="lightboxImg" src="" alt="Expanded Screenshot">
+  </div>
+
+  <!-- Three.js & Anime.js CDN Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  <script src="js/three-stage.js"></script>
+  <script src="js/presentation.js"></script>
+</body>
+</html>
